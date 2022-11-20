@@ -571,6 +571,7 @@ def train():
         print('Loaded blender', images.shape, render_poses.shape, hwf, args.datadir)
         i_train, i_val, i_test = i_split
 
+        # @TODO(hts): Check near&far of the simulation
         near = 2.
         far = 6.
 
@@ -635,6 +636,10 @@ def train():
         f = os.path.join(basedir, expname, 'config.txt')
         with open(f, 'w') as file:
             file.write(open(args.config, 'r').read())
+    
+    # ===================================================================
+    # Read data above 
+    # ===================================================================
 
     # Create nerf model
     render_kwargs_train, render_kwargs_test, start, grad_vars, optimizer = create_nerf(args)

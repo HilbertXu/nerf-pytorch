@@ -36,6 +36,7 @@ def pose_spherical(theta, phi, radius):
 
 def load_blender_data(basedir, half_res=False, testskip=1):
     splits = ['train', 'val', 'test']
+    # Read data from json (camera parameters)
     metas = {}
     for s in splits:
         with open(os.path.join(basedir, 'transforms_{}.json'.format(s)), 'r') as fp:
@@ -65,10 +66,14 @@ def load_blender_data(basedir, half_res=False, testskip=1):
     
     i_split = [np.arange(counts[i], counts[i+1]) for i in range(3)]
     
-    imgs = np.concatenate(all_imgs, 0)
-    poses = np.concatenate(all_poses, 0)
+    imgs = np.concatenate(all_imgs, axis=0)
+    poses = np.concatenate(all_poses, axis=0) # Camera to world
+
+    # [N, H, W, 4]
     
     H, W = imgs[0].shape[:2]
+    # 'camera_angle_x' is camera param, FOV
+    # TODO(hts): modify to simulator camera
     camera_angle_x = float(meta['camera_angle_x'])
     focal = .5 * W / np.tan(.5 * camera_angle_x)
     
